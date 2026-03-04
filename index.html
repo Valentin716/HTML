@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Ti ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        * { box-sizing: border-box; tap-highlight-color: transparent; }
+        
+        :root {
+            --primary: #e91e63;       
+            --primary-light: #fce4ec; 
+            --text: #333;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-light);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA DE LOGIN --- */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button.btn-main {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+            transition: transform 0.2s;
+        }
+
+        button.btn-main:active { transform: scale(0.95); }
+        .error { color: #d32f2f; font-size: 14px; margin-top: 10px; display: none; }
+
+        /* --- MENÚ PRINCIPAL --- */
+        #menu-screen {
+            display: none; 
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 40px;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.3s;
+            height: 300px;
+            position: relative;
+        }
+
+        .menu-card:hover { transform: translateY(-8px); }
+        .menu-card img { width: 100%; height: 75%; object-fit: cover; }
+        
+        .menu-title {
+            height: 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            background: var(--white);
+            font-family: 'Dancing Script', cursive;
+            font-weight: bold;
+        }
+
+        /* --- WIDGET CALENDARIO --- */
+        .calendar-widget {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 350px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .calendar-header { color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-size: 0.9rem; }
+        .calendar-day-name { font-weight: bold; color: #666; font-size: 0.8rem; }
+        .calendar-day { padding: 5px; border-radius: 5px; }
+        .calendar-day.today { background: var(--primary); color: white; font-weight: bold; }
+
+        /* --- SECCIONES INTERNAS --- */
+        section {
+            display: none;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            min-height: 100vh;
+            animation: fadeIn 0.5s ease-out;
+            padding-bottom: 80px;
+        }
+
+        .header-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(252, 228, 236, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-back {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-back:hover { background: var(--primary); color: white; }
+
+        h2.section-title {
+            margin: 0;
+            color: var(--primary);
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+        }
+
+        /* --- ESTILOS CARTAS --- */
+        .grid-cartas { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 768px) { .grid-cartas { grid-template-columns: repeat(2, 1fr); } }
+
+        .carta {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .carta:hover { transform: scale(1.02); }
+        
+        .carta h3 { 
+            margin: 0; 
+            font-size: 1.1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            color: #444; 
+            font-weight: 600; 
+            align-items: center;
+        }
+        
+        .carta span { font-size: 0.8rem; color: #aaa; }
+
+        .carta-content { 
+            display: none; 
+            margin-top: 15px; 
+            padding-top: 15px; 
+            border-top: 1px dashed #ddd; 
+            color: #555; 
+            line-height: 1.6; 
+        }
+        
+        .carta.especial { background: #fff0f6; border: 2px solid var(--primary); }
+        .carta.especial h3 { color: var(--primary); font-weight: bold; font-family: 'Dancing Script', cursive; font-size: 1.5rem;}
+        .carta.especial .carta-content { font-style: italic; color: #880e4f; }
+
+        /* --- MÚSICA --- */
+        .music-list { display: flex; flex-direction: column; gap: 20px; }
+        .music-item { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); }
+        .video-responsive { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-responsive iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .song-name { padding: 12px; text-align: center; font-weight: 600; font-size: 0.9rem; }
+
+        /* --- GALERÍAS (Ramos y Cupones) --- */
+        .gallery { column-count: 2; column-gap: 15px; }
+        @media (min-width: 768px) { .gallery { column-count: 3; } }
+        
+        .gallery-item { break-inside: avoid; margin-bottom: 15px; }
+        .gallery-item img { 
+            width: 100%; 
+            border-radius: 12px; 
+            display: block; 
+            box-shadow: var(--shadow); 
+            transition: transform 0.3s; 
+        }
+        .gallery-item img:hover { transform: scale(1.03); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Bienvenida</h2>
+            <p style="color: #666; margin-bottom: 20px;">Ingresa la clave ❤️</p>
+            <input type="text" id="username" placeholder="Usuario" autocomplete="off">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button class="btn-main" onclick="checkLogin()">Entrar</button>
+            <p class="error" id="error-msg">Clave incorrecta</p>
+        </div>
+    </div>
+
+    <div id="menu-screen">
+        <div class="menu-container">
+            <div class="menu-card" onclick="openSection('sec-cartas')">
+                <img src="https://images.unsplash.com/photo-1579208575657-c595a05383b7?auto=format&fit=crop&w=600&q=80" alt="Cartas">
+                <div class="menu-title">💌 100 Cartas</div>
+            </div>
+            <div class="menu-card" onclick="openSection('sec-musica')">
+                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Música">
+                <div class="menu-title">🎵 Playlist</div>
+            </div>
+            <div class="menu-card" onclick="openSection('sec-ramos')">
+                <img src="https://images.unsplash.com/photo-1559563362-c667ba5f5480?auto=format&fit=crop&w=600&q=80" alt="Ramos">
+                <div class="menu-title">🌹 Ramos</div>
+            </div>
+            <div class="menu-card" onclick="openSection('sec-cupones')">
+                <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=600&q=80" alt="Cupones">
+                <div class="menu-title">🎟️ Cupones</div>
+            </div>
+        </div>
+
+        <div class="calendar-widget">
+            <div class="calendar-header" id="month-year"></div>
+            <div class="calendar-grid">
+                <div class="calendar-day-name">D</div><div class="calendar-day-name">L</div><div class="calendar-day-name">M</div><div class="calendar-day-name">M</div><div class="calendar-day-name">J</div><div class="calendar-day-name">V</div><div class="calendar-day-name">S</div>
+                <div id="calendar-days" style="display: contents;"></div>
+            </div>
+        </div>
+    </div>
+
+    <section id="sec-cartas">
+        <div class="header-section"><div class="btn-back" onclick="goBack()">❮</div><h2 class="section-title">100 Razones</h2></div>
+        <div class="grid-cartas" id="cartas-container"></div>
+    </section>
+
+    <section id="sec-musica">
+        <div class="header-section"><div class="btn-back" onclick="goBack()">❮</div><h2 class="section-title">Playlist</h2></div>
+        <div class="music-list" id="music-container"></div>
+    </section>
+
+    <section id="sec-ramos">
+        <div class="header-section"><div class="btn-back" onclick="goBack()">❮</div><h2 class="section-title">Galería de Flores</h2></div>
+        <div class="gallery">
+            <div class="gallery-item"><img src="ramo1.jpg" alt="Ramo 1" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo2.jpg" alt="Ramo 2" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo3.jpg" alt="Ramo 3" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo4.jpg" alt="Ramo 4" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo5.jpg" alt="Ramo 5" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo6.jpg" alt="Ramo 6" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo7.jpg" alt="Ramo 7" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo8.jpg" alt="Ramo 8" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo9.jpg" alt="Ramo 9" loading="lazy"></div>
+            <div class="gallery-item"><img src="ramo10.jpg" alt="Ramo 10" loading="lazy"></div>
+        </div>
+    </section>
+
+    <section id="sec-cupones">
+        <div class="header-section"><div class="btn-back" onclick="goBack()">❮</div><h2 class="section-title">Tus Cupones</h2></div>
+        <div class="gallery">
+            <div class="gallery-item"><img src="cupon1.jpg" alt="Cupón 1" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon2.jpg" alt="Cupón 2" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon3.jpg" alt="Cupón 3" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon4.jpg" alt="Cupón 4" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon5.jpg" alt="Cupón 5" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon6.jpg" alt="Cupón 6" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon7.jpg" alt="Cupón 7" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon8.jpg" alt="Cupón 8" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon9.jpg" alt="Cupón 9" loading="lazy"></div>
+            <div class="gallery-item"><img src="cupon10.jpg" alt="Cupón 10" loading="lazy"></div>
+        </div>
+    </section>
+
+    <script>
+        const CREDENCIALES = { user: "root", pass: "141003" };
+
+        function checkLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if (u === CREDENCIALES.user && p === CREDENCIALES.pass) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('menu-screen').style.display = 'flex';
+                document.getElementById('menu-screen').style.flexDirection = 'column';
+                document.getElementById('menu-screen').style.alignItems = 'center';
+                generateCards(); 
+                renderCalendar();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function openSection(id) {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+            window.scrollTo(0,0);
+        }
+        function goBack() {
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            document.getElementById('menu-screen').style.display = 'flex';
+        }
+        function toggleCarta(el) {
+            const c = el.querySelector('.carta-content');
+            const arrow = el.querySelector('span');
+            if(c.style.display === "block"){
+                c.style.display = "none";
+                arrow.innerHTML = "▼";
+            } else {
+                c.style.display = "block";
+                arrow.innerHTML = "▲";
+            }
+        }
+
+        function generateCards() {
+            const container = document.getElementById('cartas-container');
+            if(container.innerHTML !== "") return; 
+            
+            const frases = [
+                "Tu sonrisa ilumina mi día.", "Me encanta cómo piensas.", "Eres mi persona favorita.", 
+                "Adoro cuando te ríes.", "Tu voz me da paz.", "Eres increíblemente fuerte.", 
+                "Me inspiras a ser mejor.", "Cada momento contigo cuenta.", "Eres única e irrepetible.", 
+                "Me haces feliz.", "Gracias por existir.", "Admiro tu inteligencia.", "Eres arte.", 
+                "Contigo todo es mejor.", "Me gusta cómo me miras.", "Eres magia pura."
+            ];
+            
+            const titulosRelleno = [
+                "✨ Un detalle", "💝 Para ti", "💭 Pensamiento", "🌟 Razón de ser", 
+                "💌 Nota rápida", "💖 Lo que siento", "🌻 Un secreto", "🥰 Solo tú", 
+                "🎶 Melodía", "💎 Tesoro", "🌈 Mi suerte", "🦋 Efecto mariposa"
+            ];
+
+            for (let i = 1; i <= 100; i++) {
+                let titulo = "";
+                let contenido = frases[i % frases.length]; 
+                let claseExtra = "";
+
+                if (i === 1) { 
+                    titulo = "💛 Nuestra Amistad"; 
+                    contenido = "Eres esa amiga incondicional que todos desean tener.<br>Gracias por escucharme, por aguantarme y por estar ahí.<br>Esta carta es solo el inicio de 100 razones por las que te valoro cada día más."; 
+                    claseExtra = "especial"; 
+                }
+                else if (i === 25) {
+                    titulo = "✨ Poema: La Coincidencia";
+                    contenido = `No creo en la suerte, pero sí en el destino,<br>ese que cruzó tu camino con el mío.<br>No fue casualidad encontrarte,<br>fue el universo conspirando para enseñarme<br>que la felicidad tiene nombre y apellido.<br><br>Llegaste sin avisar, como las mejores noticias,<br>llenando de luz mis días y mis prisas.<br>Y ahora que estás aquí, en mi presente,<br>solo quiero que te quedes eternamente.`;
+                    claseExtra = "especial";
+                }
+                else if (i === 50) { 
+                    titulo = "👁️ Poema: El Misterio de tus Ojos"; 
+                    contenido = `Dicen que el azul es inmensidad,<br>pero no han visto el café de tu mirar.<br>Es tierra fértil donde nacen sueños,<br>es el abismo donde me hago dueño<br>de mis miedos y mis alegrías.<br><br>Tienen el color de las mañanas frías<br>acompañadas de un café caliente,<br>y el brillo de una estrella naciente.<br>No busco mar, ni cielo, ni nada,<br>solo quiero vivir en tu mirada.`; 
+                    claseExtra = "especial"; 
+                }
+                else if (i === 75) {
+                    titulo = "⏳ Poema: Mi Elección";
+                    contenido = `Podría haber elegido mil caminos,<br>mil historias o distintos destinos.<br>Pero si me dieran a escoger otra vez,<br>volvería a buscarte sin timidez.<br><br>Porque tú no eres una opción pasajera,<br>eres la certeza, mi compañera.<br>En un mundo de dudas y de ruido,<br>tú eres el silencio más querido.`;
+                    claseExtra = "especial";
+                }
+                else if (i === 99) {
+                    titulo = "🔥 Poema: El Incendio";
+                    contenido = `Dicen que el fuego destruye, pero por ti,<br>yo sería el incendio más grande que se ha visto.<br><strong style="color:#d81b60">Quemaría el mundo entero solo por ti,</strong><br>sin dudar, sin miedo, sin pedir permiso.<br><br>Haría arder los relojes para detener el tiempo,<br>y convertiría en cenizas cualquier lamento.<br>Porque no me importa si todo se vuelve nada,<br>mientras tú sigas sosteniendo mi mirada.`;
+                    claseExtra = "especial";
+                }
+                else if (i === 100) { 
+                    titulo = "🌹 LA PROPUESTA"; 
+                    contenido = "<strong style='font-size:1.1rem; color:#e91e63'>Tengo un trato para ti:</strong><br><br>Dame <strong>100 días</strong> para conocerte a fondo...<br>y dame otros <strong>100 días</strong> para enamorarte perdidamente.<br><br>¿Aceptas el reto? ❤️"; 
+                    claseExtra = "especial"; 
+                }
+                else {
+                    let nombreRandom = titulosRelleno[i % titulosRelleno.length];
+                    titulo = `${nombreRandom} <small>#${i}</small>`;
+                }
+
+                container.innerHTML += `<div class="carta ${claseExtra}" onclick="toggleCarta(this)"><h3>${titulo} <span>▼</span></h3><div class="carta-content">${contenido}</div></div>`;
+            }
+        }
+
+        function renderCalendar() {
+            const date = new Date();
+            const month = date.toLocaleString('es-ES', { month: 'long' });
+            const year = date.getFullYear();
+            const day = date.getDate();
+            document.getElementById('month-year').textContent = `${month} ${year}`;
+            
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+            const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+            const container = document.getElementById('calendar-days');
+            
+            for(let i=0; i<firstDay; i++) container.innerHTML += `<div></div>`;
+            for(let i=1; i<=daysInMonth; i++) {
+                let className = "calendar-day"; 
+                if(i === day) className += " today";
+                container.innerHTML += `<div class="${className}">${i}</div>`;
+            }
+        }
+
+        const musicContainer = document.getElementById('music-container');
+        
+        const songIDs = [
+            '60ItHLz5WEA', '7C2z4GqqS5E', 'jEDQmD7nhyQ', 'T17AR8cVmto', 
+            'mxbsev38lLo', '6VIMaI8f6vM', 'zNxcP_Rth5A', '8A9IF2FEpW8', 
+            'j9HE268Um30', 'pANNkALydpI', 'Y7BhvkBvcsM', 'mBsr6uugHec', 
+            'dZk4NP8riBc', 'h_OA1834BDU', 'C0OXsyR2mMM', 'HG_0OQ62nxw', 'JnUT4hlb9dg'
+        ];
+        
+        songIDs.forEach((id, index) => {
+            musicContainer.innerHTML += `
+                <div class="music-item">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&showinfo=0" title="Canción" allowfullscreen></iframe>
+                    </div>
+                    <div class="song-name">Canción ${index + 1}</div>
+                </div>`;
+        });
+    </script>
+</body>
+</html>
